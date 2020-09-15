@@ -15,7 +15,7 @@ int main() {
   printf("================\n");
 
   delFirst(&L);
-  // delAfter(L.first,&L);
+  delAfter(L.first,&L);
   delLast(&L);
   printElement(L);
 

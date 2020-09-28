@@ -2,6 +2,8 @@
 #include <malloc.h>
 #include <string.h>
 
+//TM 2
+
 typedef struct {
   char nama[100];
   char rumus[100];

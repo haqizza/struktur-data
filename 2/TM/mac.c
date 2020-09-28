@@ -1,5 +1,7 @@
 #include "head.h"
 
+//TM 2
+
 void createList(list *L){
   (*L).first = NULL;
 }

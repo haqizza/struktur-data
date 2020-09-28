@@ -1,6 +1,9 @@
 #include "head.h"
 
 int main() {
+
+  //TM 2
+  
   list L;
   createList(&L);
 

@@ -1,0 +1,20 @@
+[{
+    "jenis": "a",
+    "tahun": 1,
+    "kolom":[
+        "nama_obat1",
+        "nama_obat2",
+        ...
+    ]
+},
+{
+   " jenis": "b",
+    "tahun": 2,
+    "kolom":[
+        "nama_obat1",
+        "nama_obat2",
+        ...
+    ]
+},
+...
+]

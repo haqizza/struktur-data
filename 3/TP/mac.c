@@ -287,25 +287,6 @@ void checkWin(list *L){
   }
 }
 
-//Print dari tail
-void printElementToHead(list L){
-  if(L.first != -1){
-    //init
-    int tunjuk = L.tail;//nilai awal dari tail
-    int i = 1;//Nomor
-    
-    printf("=== Daftar Bu Tejo ===\n");
-
-    while(tunjuk != -1){
-      printf("%d. %s %d\n", i, L.data[tunjuk].kontainer.nama, L.data[tunjuk].kontainer.umur);
-      i++;
-      
-      //Iterasi
-      tunjuk = L.data[tunjuk].prev;
-    }
-  }
-}
-
 void printElement(list L){
   if(L.first != -1){
     //init

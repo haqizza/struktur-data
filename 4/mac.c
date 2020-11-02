@@ -112,6 +112,7 @@ void delAfter(elemen* before, list *L){
 
     if(hapus != NULL){
       if(hapus->next == NULL){
+        (*L)->tail = before;
         before->next= NULL;
       }
       else{

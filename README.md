@@ -9,3 +9,4 @@ _Daftar Isi_
 6. Kuis-1 => 1,2
 7. UTS
 8. 7 - Stack 
+9. 8 - Queue

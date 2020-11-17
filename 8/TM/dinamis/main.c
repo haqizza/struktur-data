@@ -1,16 +1,15 @@
 #include "header.h"
 
 int main(){	
-    queue Q1, Q2;
-    createEmpty(&Q1);
-    createEmpty(&Q2);
-    char nama[6][50];
-    float nilai[6];
-    int prior,i;
+    queue Q;
+    createEmpty(&Q);
+    char nama[50], tiket[10], search[50];
+    int prior, waktu, i = 0;
 
-    for(i = 0;i < 6; i++){
-        scanf("%s %f", nama[i], &nilai[i]);
+    while(i = 0){
+        scanf("%s %s %d", nama, tiket, &waktu);
     }
+    scanf("%s", search);
 
     printf("******************\n");
     

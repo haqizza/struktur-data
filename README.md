@@ -11,3 +11,4 @@ _Daftar Isi_
 8. 7 - Stack 
 9. 8 - Queue
 10. Kuis-2
+11. Binary Tree (Pohon Biner)

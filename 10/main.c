@@ -35,6 +35,14 @@ int main(){
         addChild('L', node);
         addChild('M', node);
     }
+    
+    node = findSimpul('M', T.root);
+
+    if(node != NULL){
+        addChild('N', node);
+        addChild('O', node);
+        addChild('P', node);
+    }
 
     printf("=================\n");
     printf("preOrder\n");

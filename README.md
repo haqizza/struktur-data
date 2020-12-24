@@ -14,3 +14,5 @@ _Daftar Isi_
 11. 9 - Binary Tree (Pohon Biner)
 12. 10 - N-er Tree
 13. 11 - Graph
+14. UAS
+15. TMD

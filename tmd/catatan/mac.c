@@ -59,6 +59,106 @@ void addBawaan(char bawaan[][50], simpul *node){
     }
 }
 
+void delAll(simpul *root){ 
+    if(root != NULL){
+        /* jika simpul root tidak kosong */
+        if(root->child != NULL){
+            if(root->child->sibling == NULL){
+                /* jika hanya memiliki satu simpul anak */
+                delAll(root->child);
+                free(root);
+            }
+            else{
+                simpul *bantu;
+                simpul *proses;
+                bantu = root->child;
+                while(bantu->sibling != root->child){
+                    proses = bantu;
+                    bantu = bantu->sibling;
+                    delAll(proses);
+                }
+            }
+
+            free(root);
+        }
+        else{
+            free(root);
+        }
+    }
+}
+
+void delChild(char c[], simpul *root){ 
+    if(root != NULL){
+        simpul *hapus = root->child;
+        if(hapus != NULL){
+            if(hapus->sibling == NULL){
+                /*jika hanya mempunyai satu anak*/
+                if(strcmp(root->child->kontainer, c) == 0){
+                    delAll(root->child);
+                    root->child = NULL;
+                }
+                else{
+                    printf("tidak ada simpul anak dengan kontainer karakter masukan\n");
+                }
+            }
+            else{
+                /*jika memiliki lebih dari satu simpul anak*/
+                simpul *prev = NULL;
+                /*mencari simpul yang akan dihapus*/
+                int ketemu = 0;
+                while((hapus->sibling != root->child) && (ketemu == 0)){
+                    if(strcmp(hapus->kontainer, c) == 0){
+                        ketemu = 1;
+                    }
+                    else{
+                        prev = hapus;
+                        hapus = hapus->sibling;
+                    }
+                }
+                /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                if((ketemu == 0) && (strcmp(hapus->kontainer, c) == 0)){
+                    ketemu = 1;
+                }
+                if(ketemu == 1){
+                    simpul *last = root->child;
+                    /* mencari simpul anak terakhir untuk membantu proses atau pemeriksaan jika yang dihapus nantinya anak terakhir */
+                    while(last->sibling != root->child){
+                        last = last->sibling;
+                    }
+                    if(prev == NULL){
+                        /*jika simpul yang dihapus anak pertama*/
+                        if((hapus->sibling == last) && (last->sibling == root->child)){
+                            /*jika hanya ada dua anak*/
+                            root->child = last;
+                            last->sibling = NULL;
+                        }
+                        else{
+                            /* jika memiliki simpul anak lebih dari dua simpul */
+                            root->child = hapus->sibling;
+                            last->sibling = root->child; 
+                        }
+                    }
+                    else{
+                        if((prev == root->child) && (last->sibling == root->child)){
+                            /* jika hanya ada dua simpul anak dan yang dihapus adalah simpul anak kedua */
+                            root->child->sibling = NULL;
+                        }
+                        else{
+                            /* jika yang dihapus bukan simpul anak pertama dan simpul root memiliki simpul anak lebih dari dua simpul */
+                            prev->sibling = hapus->sibling;
+                            hapus->sibling = NULL;
+                        }
+                    }
+                    delAll(hapus);
+                }
+                else{
+                    printf("tidak ada simpul anak dengan kontainer karakter masukan\n");
+                }
+            }
+        } 
+    }
+}
+
 simpul* findSimpul(char c[], simpul *root){
     simpul *hasil = NULL;
     int ketemu = 0;
@@ -181,82 +281,28 @@ void pindahMandiri(simpul *nodeChild, tree *T, tree *TMandiri){
     simpul *node;
     //Jadikan Node sebagai Tree Mandiri
     TMandiri->root = nodeChild;
-
-    // Putus child dari parent sebelumnya
+    // Hapus child dari parent sebelumnya
     node = findParent(nodeChild->kontainer, T->root);
-    disconnectChild(nodeChild->kontainer, node);
+    printf("%s %s\n", nodeChild->kontainer, node->kontainer);
+    delChild(nodeChild->kontainer, node);
+    // node = findSimpul(child->kontainer, node);
+    // node = NULL;
 }
 
 void pindah(simpul *nodeChild, simpul *nodeParent, tree *T){
     simpul *node;
-    // Hapus nodeChild yang dari Parent sebelumnya
+    // Hapus node yang dari parent sebelumnya
     node = findParent(nodeChild->kontainer, T->root);
-    disconnectChild(nodeChild->kontainer, node);
-    
-    // Jadikan nodeChild sebagai Child baru dari nodeParent
+    delChild(nodeChild->kontainer, node);
+    // node = findSimpul(nodeChild->kontainer, node);
+    // node = NULL;
+    // Jadikan nodeChild sebagai child dari nodeParent
     connectChild(nodeChild, nodeParent);
 }
 
 void disconnectChild(char c[], simpul *root){
-    simpul *hapus = root->child;
-    if(hapus->sibling == NULL){
-        /*jika hanya mempunyai satu anak*/
-        if(strcmp(root->child->kontainer, c) == 0){
-            root->child = NULL;
-        }
-    }
-    else{
-        /*jika memiliki lebih dari satu simpul anak*/
-        simpul *prev = NULL;
-        /*mencari simpul yang akan dihapus*/
-        int ketemu = 0;
-        while((hapus->sibling != root->child) && (ketemu == 0)){
-            if(strcmp(hapus->kontainer, c) == 0){
-                ketemu = 1;
-            }
-            else{
-                prev = hapus;
-                hapus = hapus->sibling;
-            }
-        }
-        /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
-        if((ketemu == 0) && (strcmp(hapus->kontainer, c) == 0)){
-            ketemu = 1;
-        }
-        if(ketemu == 1){
-            simpul *last = root->child;
-            /* mencari simpul anak terakhir untuk membantu proses atau pemeriksaan jika yang dihapus nantinya anak terakhir */
-            while(last->sibling != root->child){
-                last = last->sibling;
-            }
-            if(prev == NULL){
-                /*jika simpul yang dihapus anak pertama*/
-                if((hapus->sibling == last) && (last->sibling == root->child)){
-                    /*jika hanya ada dua anak*/
-                    root->child = last;
-                    last->sibling = NULL;
-                }
-                else{
-                    /* jika memiliki simpul anak lebih dari dua simpul */
-                    root->child = hapus->sibling;
-                    last->sibling = root->child; 
-                }
-            }
-            else{
-                if((prev == root->child) && (last->sibling == root->child)){
-                    /* jika hanya ada dua simpul anak dan yang dihapus adalah simpul anak kedua */
-                    root->child->sibling = NULL;
-                }
-                else{
-                    /* jika yang dihapus bukan simpul anak pertama dan simpul root memiliki simpul anak lebih dari dua simpul */
-                    prev->sibling = hapus->sibling;
-                    hapus->sibling = NULL;
-                }
-            }
-        }
-    }
-}
 
+}
 void connectChild(simpul *nodeChild, simpul *nodeParent){
     if(nodeParent->child == NULL){
         /* jika simpul root belum memiliki simpul anak maka simpul baru menjadi anak pertama */
@@ -282,50 +328,92 @@ void connectChild(simpul *nodeChild, simpul *nodeParent){
     } 
 }
 
-void printSpaces(int length){
-    int i;
-
-    for(i = 0; i < length; i++){
-        printf(" ");
-    }
-}
-
-void printTree(int length, simpul *root){
-    int i, len, tempLength;
-    
-    if(root != NULL){
-        printSpaces(length);
-        printf("|%s\n", root->kontainer);
-        tempLength = strlen(root->kontainer);
-        
-        for(i = 0; i < root->bawaanNumber; i++){
-            printSpaces(length);
-            printf(" %s\n", root->bawaan[i]);
-
-            len = strlen(root->bawaan[i]);
-            if(len > tempLength){
-                tempLength = len;
-            }
-        }
-        printf("\n");
-        length += (tempLength + 1);
-        
+void printTreePreOrder(simpul *root){
+    if(root != NULL){ 
+        printf("node %s\n", root->kontainer);
         simpul *bantu = root->child;
 
         if(bantu != NULL){
             if(bantu->sibling == NULL){
                 /*jika memiliki satu simpul anak*/
-                printTree(length, bantu);
+                printTreePreOrder(bantu);
             }
             else{
                 /*jika memiliki banyak simpul anak*/
                 /*mencetak simpul anak*/
                 while(bantu->sibling != root->child){ 
-                    printTree(length,bantu);
+                    printTreePreOrder(bantu);
                     bantu = bantu->sibling;
                 }
                 /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
-                printTree(length, bantu);
+                printTreePreOrder(bantu);
+            }
+        }
+    } 
+}
+
+void printTreePostOrder(simpul *root){
+    if(root != NULL){
+        simpul *bantu = root->child;
+
+        if(bantu != NULL){
+            if(bantu->sibling == NULL){
+                /*jika memiliki satu simpul anak*/
+                printTreePostOrder(bantu);
+            }
+            else{
+                /*jika memiliki banyak simpul anak*/
+                /*mencetak simpul anak*/
+                while(bantu->sibling != root->child){
+                    printTreePostOrder(bantu);
+                    bantu = bantu->sibling;
+                }
+                /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                printTreePostOrder(bantu);
+            }
+        }
+        printf("node %s\n", root->kontainer);
+    } 
+}
+
+void copyBawaan(simpul **nodeTujuan, simpul *nodeAsal){
+    int i;
+    
+    (*nodeTujuan)->bawaanNumber = nodeAsal->bawaanNumber;
+
+    for(i = 0; i < nodeAsal->bawaanNumber; i++){
+        strcpy((*nodeTujuan)->bawaan[i], nodeAsal->bawaan[i]);
+    }
+}
+
+void copyTree(simpul *root1, simpul **root2){
+    if(root1 != NULL){
+        (*root2) = (simpul *) malloc (sizeof (simpul));
+        strcpy((*root2)->kontainer, root1->kontainer);
+        
+        // Salin Bawaan
+        copyBawaan(&(*root2), root1);
+
+        (*root2)->sibling = NULL;
+        (*root2)->child = NULL;
+        
+        if(root1->child != NULL){
+            if(root1->child->sibling == NULL){
+                /*jika memiliki satu simpul anak*/
+                copyTree(root1->child, &(*root2)->child);
+            }
+            else{
+                /*jika memiliki banyak simpul anak*/
+                simpul *bantu1 = root1->child;
+                simpul **bantu2 = &(*root2)->child;
+
+                while(bantu1->sibling != root1->child){
+                    copyTree(bantu1, bantu2);
+                    bantu1 = bantu1->sibling;
+                    bantu2 = &((*bantu2)->sibling);
+                }
+                /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
+                copyTree(bantu1, bantu2);
             }
         }
     } 

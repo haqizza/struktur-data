@@ -4,7 +4,6 @@ int main(){
     tree T, T2, TMandiri[20];
     int i, j;
     int nSimpul, nPindah, nBawaan = 0, nMandiri = 0;
-    int levelLength[50];
     char c, parent[50], value[50], bawaan[50][50];
 
     scanf("%d", &nSimpul);
@@ -62,10 +61,6 @@ int main(){
         }
     }
     
-    printf("pohon awal:\n\n");
-    printTree(0, T.root);
-    printf("\n");
-
     scanf("%d", &nPindah);
     simpul *nodeParent, *nodeChild;
     j = 0;
@@ -86,17 +81,13 @@ int main(){
             nodeParent = findSimpul(parent, T.root);
 
             // Pindahkan nodeChild menjadi child nodeParent
-            pindah(nodeChild, nodeParent, &T);
+            // pindah(nodeChild, nodeParent, &T);
         }
     }
 
-    printf("pohon pindah naungan:\n\n");
-    printTree(0, T.root);
-
-    printf("pohon mandiri:\n\n");
-    for(i = 0; i < nMandiri; i++){
-        printTree(0, TMandiri[0].root);
-    }
+    printTreePreOrder(T.root);
+    printf("----------%d\n", TMandiri[0].root);
+    printTreePreOrder(TMandiri[0].root);
 
     return 0; 
 }

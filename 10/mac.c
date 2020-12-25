@@ -249,7 +249,7 @@ void copyTree(simpul *root1, simpul **root2){
                 while(bantu1->sibling != root1->child){
                     copyTree(bantu1, &bantu2);
                     bantu1 = bantu1->sibling;
-                    bantu2 = bantu2->sibling;
+                    bantu2 = &((*bantu2)->sibling);
                 }
                 /*memproses simpul anak terakhir karena belum terproses dalam pengulangan*/
                 copyTree(bantu1, &bantu2);

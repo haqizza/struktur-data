@@ -26,6 +26,12 @@ void addChild(char c[], int nBawaan, char bawaan[][50], simpul *root);
 // Tambahkan Bawaan
 void addBawaan(char bawaan[][50], simpul *node); 
 
+// Hapus Node dengan Childnya
+void delAll(simpul *root);
+
+// Hapus Child dari Node
+void delChild(char c[], simpul *root);
+
 // Cari Node
 simpul* findSimpul(char c[], simpul *root); 
 
@@ -44,5 +50,8 @@ void disconnectChild(char c[], simpul *root);
 // Sambungkan Child ke Parent barunya
 void connectChild(simpul *nodeChild, simpul *nodeParent);
 
-// Print Tree sesuai format
-void printTree(int legth, simpul *root);
+
+void printTreePreOrder(simpul *root);
+void printTreePostOrder(simpul *root);
+void copyBawaan(simpul **nodeTujuan, simpul *nodeAsal);
+void copyTree(simpul *root1, simpul **root2);

@@ -9,6 +9,8 @@ typedef struct smp{
     char kontainer[50];
     char bawaan[50][50];
     int bawaanNumber;
+    int level;
+    int space;
     alamatsimpul sibling;
     alamatsimpul child;
 }simpul;
@@ -18,13 +20,13 @@ typedef struct{
 }tree;
 
 // Buat Tree
-void makeTree(char c[], int nBawaan, char bawaan[][50], tree *T);
+void makeTree(char c[], int nBawaan, char bawaan[][100], tree *T);
 
 // Tambahkan Child ke Root
-void addChild(char c[], int nBawaan, char bawaan[][50], simpul *root);
+void addChild(char c[], int nBawaan, char bawaan[][100], simpul *root);
 
 // Tambahkan Bawaan
-void addBawaan(char bawaan[][50], simpul *node); 
+void addBawaan(char bawaan[][100], simpul *node); 
 
 // Cari Node
 simpul* findSimpul(char c[], simpul *root); 
@@ -44,5 +46,14 @@ void disconnectChild(char c[], simpul *root);
 // Sambungkan Child ke Parent barunya
 void connectChild(simpul *nodeChild, simpul *nodeParent);
 
+// Hitung string terpanjang dalam satu level
+int countLongest(int level, simpul *root);
+
+// Cek level Node dan menandainya
+void checkLevel(int level, simpul **root);
+
+// Print whitespace
+void printSpaces(int length);
+
 // Print Tree sesuai format
-void printTree(int legth, simpul *root);
+void printTree(int levelSpace[], simpul *root);

@@ -4,99 +4,152 @@ int main(){
     tree T, T2, TMandiri[20];
     int i, j;
     int nSimpul, nPindah, nBawaan = 0, nMandiri = 0;
-    int levelLength[50];
-    char c, parent[50], value[50], bawaan[50][50];
-
+    int levelSpace[20], temp;
+    char c, parent[100], value[100], bawaan[100][100];
+    
+    // Scan jumlah Node
     scanf("%d", &nSimpul);
 
+    //Inisialisasi Tree
     for(i = 0; i < nSimpul; i++){
         j = 0;
         
+        //Scan Parent dari Node
         do{
             scanf(" %c", &c);
             parent[j] = c;
-            // printf("%c", c);
             j++;
         }while(c != '#');
 
         j--;
         parent[j] = '\0';
-        // printf("%s\n", parent);
         j = 0;
 
+        //Scan value Node
         do{
             scanf("%c", &c);
             value[j] = c;
-            // printf("%c",c);
             j++;
         }while(c != '#');
 
         j--;
         value[j] = '\0';
-        // printf("%s\n", value);
-        scanf("%d", &nBawaan);
-        // printf("n: %d", nBawaan);
 
+        //Scan jumlah bawaan
+        scanf("%d", &nBawaan);
+
+        // Scan bawaan
         for(j = 0; j < nBawaan; j++){
             scanf("%s", bawaan[j]);
         }
-        // printf("--%s %s\n", parent, value);
         
         simpul *node;
 
-        // printf("%d\n",strcmp(parent, "null"));
+        // Buat Node
         if(strcmp(parent, "null") == 0){
-            // jika ini tak punya parent, berarti root, maka dibuat Tree
+            // Jika ini tak punya parent, berarti root, maka dibuat Tree
             makeTree(value, nBawaan, bawaan, &T);
-            // printf("in oke\n");
             node = T.root;
-            // printf("out oke\n");
         }
         else{
             // Jika punya parent
             // Cari simpul
             node = findSimpul(parent, T.root);
-            // printf("find node %s\n", node->kontainer);
+
             // Tambah Child
             addChild(value, nBawaan, bawaan, node);
         }
     }
     
-    printf("pohon awal:\n\n");
-    printTree(0, T.root);
-    printf("\n");
-
+    // Scan jumlah pindah
     scanf("%d", &nPindah);
-    simpul *nodeParent, *nodeChild;
+
+    char valueP[100][100], parentP[100][100];
+
+    for(i = 0; i < nPindah; i++){
+        // Scan value dan Parent
+        scanf("%s %s", valueP[i], parentP[i]);
+    }
+
+    //Cek level dan tandai
+    checkLevel(0, &T.root);
+
+    //Hitung space untuk setiap level
+    levelSpace[0] = 0;
+    temp = 0;
+    
+    for(i = 1; i < 20; i++){
+        levelSpace[i] = countLongest(i - 1, T.root) + temp + 1;
+        temp = levelSpace[i];
+    }
+
+    // Print pohon awal
+    printf("pohon awal:\n");
+    printTree(levelSpace, T.root);
+    
+    simpul *nodeParent, *nodeChild;    
     j = 0;
     
+    //Perpindahan
     for(i = 0; i < nPindah; i++){
-        scanf("%s %s", value, parent);
-
-        if(strcmp(parent, "mandiri") == 0){
-            nodeChild = findSimpul(value, T.root);
+        if(strcmp(parentP[i], "mandiri") == 0){
+            // Jika dijadikan mandiri
+            // Cari simpul yang akan dilepas
+            nodeChild = findSimpul(valueP[i], T.root);
+            
             // Tree pindah mandiri masing masing dijadikan pohon
             pindahMandiri(nodeChild, &T, &TMandiri[j]);
             
-            nMandiri++; // Ganti pohon bila terisi
+            nMandiri++; // Ganti Tree bila terisi
             j++; // Tambah Tree
         }
         else{
-            nodeChild = findSimpul(value, T.root);
-            nodeParent = findSimpul(parent, T.root);
+            //Jika dipindahkan
+            // Cari masing-masing Node
+            nodeChild = findSimpul(valueP[i], T.root);
+            nodeParent = findSimpul(parentP[i], T.root);
 
-            // Pindahkan nodeChild menjadi child nodeParent
+            // Pindahkan nodeChild menjadi child dari nodeParent
             pindah(nodeChild, nodeParent, &T);
         }
     }
-
-    printf("pohon pindah naungan:\n\n");
-    printTree(0, T.root);
-
-    printf("pohon mandiri:\n\n");
+    
+    //Cek level dan tandai
+    checkLevel(0, &T.root);
+    
+    //Hitung space untuk setiap level
+    levelSpace[0] = 0;
+    temp = 0;
+    
+    for(i = 1; i < 20; i++){
+        levelSpace[i] = countLongest(i - 1, T.root) + temp + 1;
+        temp = levelSpace[i];
+    }
+    
+    // Print 
+    printf("\npohon pindah naungan:\n");
+    printTree(levelSpace, T.root);
+    
+    //  Print
+    if(nMandiri > 0){
+        printf("\npohon mandiri:\n");
+    }
     for(i = 0; i < nMandiri; i++){
-        printTree(0, TMandiri[0].root);
+        // Cek level dan tandai
+        checkLevel(0, &TMandiri[i].root);
+
+        //Hitung space untuk setiap level
+        levelSpace[0] = 0;
+        temp = 0;
+        
+        for(j = 1; j < 20; j++){
+            levelSpace[j] = countLongest(j - 1, TMandiri[i].root) + temp + 1;
+            temp = levelSpace[j];
+        }
+
+        // Print
+        printTree(levelSpace, TMandiri[i].root);
     }
 
-    return 0; 
+    return 0;
 }
